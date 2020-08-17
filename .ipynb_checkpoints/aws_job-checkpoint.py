@@ -13,7 +13,7 @@ else:
     role = "[YOUR ROLE]"
 
 
-bucket = "utec-workshop-cats-n-dogs"
+bucket = "cats-n-dogs"
 key = "data"
 key_output = "output"                   # Path from the bucket's root to the dataset
 train_instance_type='ml.p2.xlarge'      # The type of EC2 instance which will be used for training
