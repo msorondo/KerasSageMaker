@@ -13,7 +13,7 @@ else:
     role = "[YOUR ROLE]"
 
 
-bucket = "cats-n-dogs"
+bucket = "utec-workshop-cats-n-dogs"
 key = "data"
 key_output = "output"                   # Path from the bucket's root to the dataset
 train_instance_type='ml.p2.xlarge'      # The type of EC2 instance which will be used for training
@@ -27,7 +27,7 @@ train_input_path = "s3://{}/{}/train/".format(bucket, key)
 validation_input_path = "s3://{}/{}/validation/".format(bucket, key)
 
 estimator = TensorFlow(
-  entry_point=os.path.join(os.path.dirname(__file__), "cats_n_dogs.py"),             # Your entry script
+  entry_point="cats_n_dogs.py",             # Your entry script
   role=role,
   framework_version="1.12.0",               # TensorFlow's version
   hyperparameters=hyperparameters,

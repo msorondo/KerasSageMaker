@@ -27,7 +27,7 @@ train_input_path = "s3://{}/{}/train/".format(bucket, key)
 validation_input_path = "s3://{}/{}/validation/".format(bucket, key)
 
 estimator = TensorFlow(
-  entry_point=os.path.join(os.path.dirname(__file__), "cats_n_dogs.py"),             # Your entry script
+  entry_point="cats_n_dogs.py",             # Your entry script
   role=role,
   framework_version="1.12.0",               # TensorFlow's version
   hyperparameters=hyperparameters,
