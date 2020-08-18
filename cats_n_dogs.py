@@ -59,7 +59,6 @@ def eval_input_fn(training_dir, hyperparameters):
 
 
 def _input(mode, batch_size, data_dir):
-    #assert os.path.exists(data_dir), ("Unable to find images resources for input, are you sure you downloaded them ?")
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         datagen = ImageDataGenerator(
