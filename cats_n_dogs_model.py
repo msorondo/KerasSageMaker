@@ -7,37 +7,32 @@ from tensorflow.python.training.rmsprop import RMSPropOptimizer
 def keras_model_fn(hyperparameters):
     model = Sequential()
 
-    model.add(Conv2D(32, kernel_size=(3, 3), input_shape=(128, 128, 3), activation="relu", name="inputs"))
-    model.add(MaxPooling2D(pool_size = (2,2)))
-              
+    model.add(Conv2D(32, kernel_size=(3, 3), input_shape=(128, 128, 3), activation="relu", name="inputs",
+                     padding="same"))
+    model.add(MaxPooling2D())
+    model.add(Conv2D(32, kernel_size=(3, 3), activation="relu"))
+    model.add(MaxPooling2D())
+    model.add(Dropout(0.25))
+
+    model.add(Conv2D(64, kernel_size=(3, 3), activation="relu", padding="same"))
+    model.add(MaxPooling2D())
     model.add(Conv2D(64, kernel_size=(3, 3), activation="relu"))
-    model.add(MaxPooling2D(pool_size = (2,2)))
-    model.add(Dropout(0.4))
+    model.add(MaxPooling2D())
+    model.add(Dropout(0.25))
 
-    model.add(Conv2D(128, kernel_size=(3, 3), activation="relu"))
-    model.add(MaxPooling2D(pool_size = (2,2)))
-    model.add(Dropout(0.4))
-              
-    model.add(Conv2D(256, kernel_size=(3, 3), activation="relu"))
-    model.add(MaxPooling2D(pool_size = (2,2)))
-    model.add(Dropout(0.4))
-
-    model.add(Conv2D(512, kernel_size=(1, 1), activation="relu"))
-    
+    model.add(Conv2D(128, kernel_size=(3, 3), activation="relu", padding="same"))
+    model.add(MaxPooling2D())
+    model.add(Dropout(0.25))
     model.add(Flatten())
-    model.add(Dropout(0.4))
 
-
-    model.add(Dense(units=120, activation="relu"))
-    model.add(Dense(units=2, activation="sigmoid"))
-              
+    model.add(Dense(256, activation="relu"))
+    model.add(Dense(256, activation="relu"))
+    model.add(Dropout(0.25))
+    model.add(Dense(2, activation="softmax"))
 
     opt = RMSPropOptimizer(learning_rate=hyperparameters['learning_rate'], decay=hyperparameters['decay'])
 
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=["accuracy"])
-    #model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    #model.summary()
-              
     return model
 
 def serving_input_fn(hyperparameters):
