@@ -9,8 +9,7 @@ WIDTH = 128
 DEPTH = 3
 NUM_CLASSES = 2
 BATCH_SIZE = 64
-INPUT_TENSOR_NAME = "inputs_input" # According to Amazon, needs to match the name of the first layer + "_input"
-                                   # Workaround for actual known bugs
+INPUT_TENSOR_NAME = "inputs_input" 
 
 def keras_model_fn(hyperparameters):
     model = Sequential()
@@ -59,7 +58,6 @@ def eval_input_fn(training_dir, hyperparameters):
 
 
 def _input(mode, batch_size, data_dir):
-    #assert os.path.exists(data_dir), ("Unable to find images resources for input, are you sure you downloaded them ?")
 
     if mode == tf.estimator.ModeKeys.TRAIN:
         datagen = ImageDataGenerator(

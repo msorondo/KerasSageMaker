@@ -4,10 +4,17 @@ from tensorflow.python.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatte
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.training.rmsprop import RMSPropOptimizer
 
+HEIGHT = 128
+WIDTH = 128
+DEPTH = 3
+NUM_CLASSES = 2
+BATCH_SIZE = 64
+INPUT_TENSOR_NAME = "inputs_input" 
+
 def keras_model_fn(hyperparameters):
     model = Sequential()
 
-    model.add(Conv2D(32, kernel_size=(3, 3), input_shape=(128, 128, 3), activation="relu", name="inputs",
+    model.add(Conv2D(32, kernel_size=(3, 3), input_shape=(HEIGHT, WIDTH, DEPTH), activation="relu", name="inputs",
                      padding="same"))
     model.add(MaxPooling2D())
     model.add(Conv2D(32, kernel_size=(3, 3), activation="relu"))
@@ -35,16 +42,20 @@ def keras_model_fn(hyperparameters):
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=["accuracy"])
     return model
 
+
 def serving_input_fn(hyperparameters):
-    tensor = tf.placeholder(tf.float32, shape=[None, 128, 128, 3])
-    inputs = {"inputs_input": tensor}
+    tensor = tf.placeholder(tf.float32, shape=[None, HEIGHT, WIDTH, DEPTH])
+    inputs = {INPUT_TENSOR_NAME: tensor}
     return tf.estimator.export.ServingInputReceiver(inputs, inputs)
 
+
 def train_input_fn(training_dir, hyperparameters):
-    return _input(tf.estimator.ModeKeys.TRAIN, batch_size=64, data_dir=training_dir)
+    return _input(tf.estimator.ModeKeys.TRAIN, batch_size=BATCH_SIZE, data_dir=training_dir)
+
 
 def eval_input_fn(training_dir, hyperparameters):
-    return _input(tf.estimator.ModeKeys.EVAL, batch_size=64, data_dir=training_dir)
+    return _input(tf.estimator.ModeKeys.EVAL, batch_size=BATCH_SIZE, data_dir=training_dir)
+
 
 def _input(mode, batch_size, data_dir):
 
@@ -58,7 +69,7 @@ def _input(mode, batch_size, data_dir):
     else:
         datagen = ImageDataGenerator(rescale=1. / 255)
 
-    generator = datagen.flow_from_directory(data_dir, target_size=(128, 128), batch_size=batch_size)
+    generator = datagen.flow_from_directory(data_dir, target_size=(HEIGHT, WIDTH), batch_size=batch_size)
     images, labels = generator.next()
 
-    return {"inputs_input": images}, labels
+    return {INPUT_TENSOR_NAME: images}, labels
